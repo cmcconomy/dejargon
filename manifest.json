@@ -1,0 +1,26 @@
+{
+"manifest_version": 2,
+    "name": "dejargon",
+    "description": "Uses a dictionary to provide translations",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "js": [
+                "dejargon.js"
+            ],
+            "css": [
+                "dejargon.css"
+            ],
+
+            "run_at": "document_end"
+        }
+    ],
+    "storage": {
+        "managed_schema": "schema.json"
+    },
+    "permissions" : ["activeTab", "storage"],
+    "options_page" : "options.html"
+}
