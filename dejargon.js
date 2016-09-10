@@ -1,9 +1,3 @@
-// To be loaded from local storage .. CSV input.
-var jargonList = {
-	'jargon' : 'this means "bullshit"',
-	'the' : 'sometimes "TEH"'
-}
-
 function getTextNodes() {
 	var textNodes = [];
 	var elements = document.getElementsByTagName('*');
@@ -52,7 +46,7 @@ function replaceJargon(jargonTextNodes, jargonList) {
 	
 		var tooltip = document.createElement('span');
 		tooltip.setAttribute('class', 'dej-tooltip');
-		tooltip.appendChild(document.createTextNode(jargonList[jargon]));
+		tooltip.appendChild(document.createTextNode(jargonList[jargon.toLowerCase()]));
 		
 		highlight.appendChild(tooltip);
 		return highlight;
@@ -92,10 +86,23 @@ function replaceJargon(jargonTextNodes, jargonList) {
 	});
 }
 
+function lowerCasify(jargonList) {
+	var lcJargonList = {};
+	Object.keys(jargonList).forEach(key=> {lcJargonList[key.toLowerCase()] = jargonList[key];});
+
+	return lcJargonList;
+}
+
 // --- main here ---
 
-console.log("Applying Jargon Extension Logic");
-var textNodes = getTextNodes();
-var filteredTextNodes = filterTextNodes(textNodes,jargonList);
+chrome.storage.sync.get({
+	jargonMap: {}
+    }, function(items) {
+	console.log("Applying Jargon Extension Logic");
+	jargonList = lowerCasify(items.jargonMap);
+	var textNodes = getTextNodes();
+	var filteredTextNodes = filterTextNodes(textNodes,jargonList);
 
-replaceJargon(filteredTextNodes, jargonList);
+	replaceJargon(filteredTextNodes, jargonList);
+});
+

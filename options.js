@@ -1,16 +1,39 @@
-// Saves options to chrome.storage
-function save_options() {
-  var jargonMapText = document.getElementById('jargonMap').value;
-  chrome.storage.sync.set({
-    jargonMap : jargonMapText
-  }, function() {
-    // Update status to let user know options were saved.
+// Depends on previously included parsepapa.js
+
+function log(text) {
     var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
+    status.textContent = text;
     setTimeout(function() {
       status.textContent = '';
-    }, 750);
-  });
+    }, 3000);
+}
+// Saves options to chrome.storage
+function save_options() {
+  var jargonMapText = document.getElementById('jargonMapText').value;
+  var parseResults = Papa.parse(jargonMapText);
+
+  parseResults.data
+	  .filter(row=>{return row.length!=2})
+	  .forEach(row=>{parseResults.errors.push("Each row needs 'jargonElement,translation' (2 elements); but row contained: '" + row + "' (" + row.length + " elements)")});
+
+  if( parseResults.errors.length != 0 ) {
+	  log(parseResults.errors.join('\n'));
+  } else {
+	  var jargonMap = {};
+	  parseResults.data.forEach((row)=>{
+		  jargonMap[row[0]] = row[1];
+	  });
+	  console.log(jargonMap);
+	  console.log(jargonMapText);
+
+	  chrome.storage.sync.set({
+	    jargonMapText : jargonMapText,
+	    jargonMap : jargonMap
+	  }, function() {
+	    // Update status to let user know options were saved.
+	    log('Options Saved.');
+	  });
+  }
 }
 
 // Restores select box and checkbox state using the preferences
@@ -18,9 +41,10 @@ function save_options() {
 function restore_options() {
   // Use default value color = 'red' and likesColor = true.
   chrome.storage.sync.get({
-    jargonMap: ''
+	jargonMapText: '',
+    jargonMap: {}
   }, function(items) {
-    document.getElementById('jargonMap').value = items.jargonMap;
+    document.getElementById('jargonMapText').value = items.jargonMapText;
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);
