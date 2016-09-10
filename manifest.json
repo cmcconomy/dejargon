@@ -3,7 +3,7 @@
     "name": "dejargon",
     "short_name" : "dejargon",
     "description": "Displays user-provided translations for terms",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "content_scripts": [
         {
             "matches": [
