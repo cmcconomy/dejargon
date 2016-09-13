@@ -13,14 +13,14 @@ function save_options() {
   var parseResults = Papa.parse(jargonMapText);
 
   parseResults.data
-	  .filter(row=>{return row.length!=2})
-	  .forEach(row=>{parseResults.errors.push("Each row needs 'jargonElement,translation' (2 elements); but row contained: '" + row + "' (" + row.length + " elements)")});
+	  .filter(function(row){return row.length!=2})
+	  .forEach(function(row){parseResults.errors.push("Each row needs 'jargonElement,translation' (2 elements); but row contained: '" + row + "' (" + row.length + " elements)")});
 
   if( parseResults.errors.length != 0 ) {
 	  log(parseResults.errors.join('\n'));
   } else {
 	  var jargonMap = {};
-	  parseResults.data.forEach((row)=>{
+	  parseResults.data.forEach(function(row){
 		  jargonMap[row[0]] = row[1];
 	  });
 	  console.log(jargonMap);

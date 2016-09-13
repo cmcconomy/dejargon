@@ -32,7 +32,7 @@ function getJargonRegExp(jargonList) {
 function filterTextNodes(textNodes, jargonList) {
 	var jargonRegex = getJargonRegExp(jargonList);
 	// lastIndex needs to be reset on every invocation in filter so that the whole string is searched with test()
-	return textNodes.filter(node=>{jargonRegex.lastIndex=0;return jargonRegex.test(node.nodeValue)});
+	return textNodes.filter(function(node){jargonRegex.lastIndex=0;return jargonRegex.test(node.nodeValue)});
 }
 
 function replaceJargon(jargonTextNodes, jargonList) {
@@ -81,14 +81,14 @@ function replaceJargon(jargonTextNodes, jargonList) {
 		}
 
 		var replacementNode = document.createElement('span');
-		replacementNodes.forEach(n=>{replacementNode.appendChild(n)});
+		replacementNodes.forEach(function(n){replacementNode.appendChild(n)});
 		parentNode.replaceChild(replacementNode, textNode);
 	});
 }
 
 function lowerCasify(jargonList) {
 	var lcJargonList = {};
-	Object.keys(jargonList).forEach(key=> {lcJargonList[key.toLowerCase()] = jargonList[key];});
+	Object.keys(jargonList).forEach(function(key){lcJargonList[key.toLowerCase()] = jargonList[key];});
 
 	return lcJargonList;
 }
